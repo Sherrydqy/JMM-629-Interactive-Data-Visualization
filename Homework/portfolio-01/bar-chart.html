@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise Portfolio</title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <header>
+      <!-- ADD YOUR NAME -->
+      <h1>Qinyu Ding: Exercise Portfolio</h1>
+    </header>
+
+    <div id="content">
+
+      <nav>
+        <ul>
+          <li><a href="./index.html">Return to Main Page</a></li>
+        </ul>
+      </nav>
+
+      <main>
+
+        <h2><!-- VISUALIZATION TITLE --></h2>
+
+        <p><!-- INFORMATION ABOUT YOUR VISUALIZATION: What is this about? --></p>
+
+        <svg></svg>
+
+      </main>
+    </div>
+
+    <script src="./js/d3.min.js"></script>
+    <script>
+      var myData = [];
+      d3.csv("./mlb-standings.csv", function(e,rawData){
+        if(e){
+          console.log("Error:"+e);
+        }
+        rawData.forEach(function(d){
+          myData.push([d.team,d.abb,d.win]);
+        })
+      })
+
+    </script>
+  </body>
+</html>
