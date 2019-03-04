@@ -23,21 +23,118 @@
 
       <main>
 
-        <h2><!-- VISUALIZATION TITLE --></h2>
+        <h2>The relationship between touchdowns and yards by players</h2>
 
-        <p><!-- INFORMATION ABOUT YOUR VISUALIZATION: What is this about? --></p>
+        <p>This chart describes the relationship between touchdowns and yards of different players.<br>
+          The y-axis represents touchdowns while the x-axis represents yards.<br>
+        A tiny circle shaded with darker orange indicates this player's fumble is 0.
+      <br>(I'm sorry, since I'm a foreigner, I know nothing about American football.) </p>
 
-        <!-- ADD YOUR VISUALIZATION HERE -->
+      <div id="chart"></div>
 
       </main>
     </div>
 
     <script src="./js/d3.min.js"></script>
     <script>
+      var width = 1440;
+      var height = 655;
+      var padding = 50;
+      var paddingTop = 150;
+      var paddingBottom = 150;
+      var interval = 45;
+      var barWidth = 20;
+      var paddingLeft = padding+barWidth/2;
+      var yAxisHeight = 700;
+      var myData = [];
+      var myColor = [];
+      d3.csv("./data/nfl-rushing.csv").then(function(myData){
+        myData.forEach(function(d,i){
+          if(parseInt(d.FUM)!=0){
+            myColor[i]="0.3";
+          }
+          else
+            myColor[i]="1.0";
 
-      // add your script here
-      // OR
-      // add a link to a stand-alone script in the js folder
+        })
+        console.log(myColor);
+    //  });
+
+      var svg = d3.select("#chart")
+                  .append("svg")
+                  .attr("width", width)
+                  .attr("height", height)
+
+      var circles = svg.selectAll("circle")
+        				   .data(myData)
+        					 .enter()
+        					 .append("circle")
+                   .attr("cx", function(d,i){
+                      return paddingLeft+parseInt(d.Yds);
+                    })
+                    .attr("cy", function(d,i){
+                      return yAxisHeight-parseInt(d.TD)*50-paddingBottom;
+
+                    })
+                    .attr("r", function(d){
+                      return parseInt(d.FUM)*8+2;
+                    })
+                   .attr("fill", "ORANGE")
+                   .attr("opacity",function(d,i){
+                     return myColor[i];
+                   });
+    var label = svg.selectAll("text")
+                    .data(myData)
+                    .enter()
+                    .append("text")
+                    .text(function(d,i){
+                          //console.log(i);
+                          if(parseInt(d.FUM)!=0){
+                          return d.FUM;
+                        }
+
+                    })
+                    .attr("font-size","11px")
+                    .attr("text-anchor","middle")
+                    .attr("x", function(d,i) {
+                          return paddingLeft+parseInt(d.Yds);
+                      })
+                    .attr("y", function(d) {
+                          return yAxisHeight-parseInt(d.TD)*50-paddingBottom;
+                      })
+
+
+      var yMax = d3.max(myData,function(d,i){
+                     //console.log(i)
+                     return parseInt(d.TD)+2;
+                   });
+      var xMax = d3.max(myData,function(d,i){
+                                  //console.log(i)
+                      return parseInt(d.Yds);
+                  });
+      var xScale = d3.scaleLinear()
+                    .domain([0,xMax])
+                    .range([paddingLeft, width-paddingLeft]);
+      var yScale = d3.scaleLinear()
+                    .domain([0, yMax])
+                    .range([yAxisHeight-paddingBottom,0]);
+      var xAxis = d3.axisBottom()
+                    .scale(xScale)
+                    .ticks(5);
+
+      var yAxis = d3.axisRight()
+                    .scale(yScale);
+      svg.append("g")
+         .attr("class", "x-axis")
+         .attr("transform","translate(0,"+(yAxisHeight-paddingBottom)+")")
+         .call(xAxis);
+
+        svg.append("g")
+          .call(yAxis);
+
+
+
+  });
 
     </script>
   </body>
