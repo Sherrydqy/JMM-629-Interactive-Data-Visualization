@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise Portfolio</title>
+    <link href="./css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <header>
+      <!-- ADD YOUR NAME -->
+      <h1>QINYU DING: Exercise Portfolio</h1>
+    </header>
+
+    <div id="content">
+
+      <nav>
+        <ul>
+          <li><a href="./index.html">Return to Main Page</a></li>
+        </ul>
+      </nav>
+
+      <main>
+
+        <h2>Monthly Stock Information for Apple Inc.</h2>
+          <h3>From Jan. 1, 1996 to March 1, 2019</h3>
+
+        <p>This chart describes monthly stock price for Apple Company iFrom Jan. 1, 1996 to March 1, 2019<br>
+          The y-axis represents the stock pricing while the x-axis represents the time</p>
+
+        <!-- ADD YOUR VISUALIZATION HERE -->
+        <div id="chart"></div>
+      </main>
+    </div>
+
+    <script src="./js/d3.min.js"></script>
+    <script>
+      var width = 1000;
+      var height = 500;
+      var margin = {
+        top: 80,
+        right: 150,
+        bottom: 35,
+        left: 20
+      }
+      var Events = new Array();
+      var EventDates = new Array();
+      var formatFinal = d3.timeFormat("%B %Y");
+      var formatYear = d3.timeFormat("%Y");
+      var svg = d3.select("#chart")
+                  .append("svg")
+                  .attr("width",width+margin.right+margin.right)
+                  .attr("height",height+margin.top+margin.bottom);
+      d3.csv("./data/AAPL.csv").then(function(data){
+        var timeParser = d3.timeParse("%Y-%m-%d");//timeParse必须和元数据格式相同，这里就不能 %Y/%m/%d
+        data.forEach(function(d,i){
+          d.Date = timeParser(d.Date);
+          d.Close = parseFloat(d.Close);//一定要parsefloat不然下面的全部数据范围都拿不出来
+        });
+        EventDates.push(formatFinal(timeParser("1998-08-01")));
+        Events.push("Apple introduces iMac");
+        EventDates.push(formatFinal(timeParser("2007-07-01")));
+        Events.push("Apple introduces iPhone");
+        EventDates.push(formatFinal(timeParser("2010-04-01")));
+        Events.push("Apple introduces iPad");
+        EventDates.push(formatFinal(timeParser("2018-08-01")));
+        Events.push("Apple becomes a trillion-dollar company");
+      // console.log(EventDates);
+
+
+      var xScale = d3.scaleTime()
+                     .domain(d3.extent(data,function(d){
+                       return d.Date;
+                     }))
+                     .range([margin.left,width]);
+
+      var yScale = d3.scaleLinear()
+                     .domain(d3.extent(data,function(d){// extend 第一个参数一定是data不能少了，不然data传不进来
+                       return d.Close;
+
+                     }))
+                    // .domain([0,250])
+                     .range([height,margin.top]);// 这个区间一定注意不要反了
+
+
+
+
+
+        var line = d3.line()
+                     .x(function(d){
+                       return xScale(d.Date);
+                     })
+                     .y(function(d){
+                       return yScale(d.Close);
+                     });
+
+        svg.append("path")
+           .datum(data)
+           .attr("class","line")//一定要有class，line，不然svg画出来是一个图形，一定要fill：none才可以
+           .attr("d",line);
+        var xAxis = d3.axisBottom()
+                      .scale(xScale)
+                      .ticks(31)
+                      .tickFormat(data.forEach(function(d,i){
+                      if(i%6 == 0){
+                        //console.log("i: "+i+"date:"+formatMonth(d.Date)+" "+formatYear(d.Date));
+                          return formatFinal(d.Date);//+" "+formatYear(d.Date);
+                        }
+                    }));
+
+         var yAxis = d3.axisRight()
+                       .scale(yScale)
+                       .ticks(parseInt(data.length)/20)
+                       .tickFormat(data.forEach(function(d,i){
+                         //if(i%20 == 0){
+                           return "$ "+d.Close;
+                        // }
+                      }));
+          svg.append("g")
+
+             .attr("class","x-axis")
+             .attr("transform","translate("+0+","+height+")")
+             .call(xAxis);
+          svg.append("g")
+             //.attr("class","x-axis")
+             .attr("transfrom","translate("+200+","+200+")")
+             .call(yAxis);
+        /*  svg.append("text")
+            //.attr("class", "x label")
+            .attr("text-anchor", "end")
+            .attr("x", 0)
+          //  .attr("y", height +16)
+            .text("Timeline");*/
+          svg.append("text")
+              //.attr("class", "y label")
+            //  .attr("text-anchor", "end")
+            //  .attr("x", 0)
+              .attr("y", margin.top-40)
+              .attr("dy", ".75em")
+            //  .attr("transform", "rotate(-90)")
+              .text("Stock pricing ($)");
+            svg.append("line")
+                .attr("class","midline")
+                .attr("x1",margin.left)
+                .attr("x2",width)
+                .attr("y1",yScale(d3.max(data,function(d) {
+                        return d.Close;
+                        })))
+                .attr("y2",yScale(d3.max(data,function(d) {
+                        return d.Close;
+                        })));
+                svg.append("text")
+                          //.attr("class", "x label")
+                    .attr("text-anchor", "end")
+                    .attr("x", width+270)
+                    .attr("y", yScale(d3.max(data,function(d) {
+                            return d.Close;
+                          }))+3)
+                    .attr("fill","orange")
+                    .text("The highest closing price over years");
+                svg.append("line")
+                    .attr("class","verline")
+                    .attr("x1",xScale(timeParser("2009-01-20")))
+                    .attr("x2",xScale(timeParser("2009-01-20")))
+                    .attr("y1",-10)
+                    .attr("y2",height+10);
+                svg.append("line")
+                    .attr("class","verline")
+                    .attr("x1",xScale(timeParser("2017-01-20")))
+                    .attr("x2",xScale(timeParser("2017-01-20")))
+                    .attr("y1",-10)
+                    .attr("y2",height+10);
+                    svg.append("line")
+                        .attr("class","noteline")
+                        .attr("x1",xScale(timeParser("2009-01-20")))
+                        .attr("x2",xScale(timeParser("2009-01-20"))+80)
+                        .attr("y1",height+30)
+                        .attr("y2",height+30);
+                        svg.append("line")
+                            .attr("class","noteline")
+                            .attr("x1",xScale(timeParser("2017-01-20"))-80)
+                            .attr("x2",xScale(timeParser("2017-01-20")))
+                            .attr("y1",height+30)
+                            .attr("y2",height+30);
+                            svg.append("text")
+                                .attr("class","note")
+                                .attr("x",xScale(timeParser("2009-01-20"))+120)
+
+                                .attr("y",height+35)
+                                .text("Obama Administration");
+
+
+                                var circles = svg.selectAll("circle")
+                                  .data(data)
+                                  .enter()
+                                  .filter(function(d) {
+                                      if (EventDates.indexOf(formatFinal(d.Date))>-1) {
+                                            //console.log("哟"+ formatFinal(d.Date));
+                                            return d;
+                                        }
+                                    })
+                                  .append("circle")
+                                  .attr("cx", function(d){
+                                    return xScale(d.Date);
+                                  })
+                                  .attr("cy", function(d){
+                                    return yScale(d.Close);
+                                  })
+                                  .attr("r", 5)
+                                  .attr("fill","red");
+
+              var pointLines = svg.selectAll("rect")
+                                    .data(data)
+                                    .enter()
+                                    .filter(function(d) {
+                                        if (EventDates.indexOf(formatFinal(d.Date))>-1) {
+                                              //console.log("哟"+ formatFinal(d.Date));
+                                              return d;
+                                          }
+                                      })
+                                  .append("line")
+                                  .attr("class","pointline")
+                                  .attr("x1",function(d){
+                                    return xScale(d.Date)+5;
+                                  })
+                                  .attr("x2",function(d){
+                                    return xScale(d.Date)+25;
+                                  })
+                                  .attr("y1",function(d){
+                                    return yScale(d.Close)-5;
+                                  })
+                                  .attr("y2",function(d){
+                                    return yScale(d.Close)-25;
+                                  });
+
+                var pointText = svg.selectAll("rect")
+                                    .data(data)
+                                    .enter()
+                                    .filter(function(d) {
+                                        if (EventDates.indexOf(formatFinal(d.Date))>-1) {
+                                              //console.log("哟"+ formatFinal(d.Date));
+                                              return d;
+                                          }
+                                      })
+                                  .append("text")
+
+                                  .attr("class","pointnote")
+
+                                  .attr("x",function(d){
+                                    return xScale(d.Date)+35;
+                                  })
+                                  .attr("y",function(d){
+                                    return yScale(d.Close)-35;
+                                  })
+                                  .text(function(d,i){
+                                    var a = (EventDates.indexOf(formatFinal(d.Date)));
+                                  //  console.log(Events[a]);
+                                    return Events[a];
+                                  });
+
+
+
+      });
+    </script>
+  </body>
+</html>
