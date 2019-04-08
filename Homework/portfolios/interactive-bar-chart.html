@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Exercise Portfolio</title>
+  <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <header>
+    <!-- ADD YOUR NAME -->
+    <h1>Qinyu Ding: Exercise Portfolio</h1>
+  </header>
+
+  <div id="content">
+
+    <nav>
+      <ul>
+        <li><a href="index.html">Return to Main Page</a></li>
+      </ul>
+    </nav>
+
+    <main>
+
+      <h2>Spring Training Win Percentage: Cactus League</h2>
+
+      <p>This chart describes the win percentage of Cactus League in the Spring Training<br>
+        The x-axis represents team in Cactus League while the y-axis represents each team's win percentage<br>
+      <button id="btn_c" >Cactus</button>
+      <button id="btn_g" >Grapefruit</button>
+      <div id="chart"></div>
+
+    </main>
+  </div>
+
+  <script src="./library/d3.min.js"></script>
+  <script src="./library/lodash.min.js"></script>
+  <script>
+  var width, height,g;
+  var barWidth = 35;
+  var flag = 0;
+  var myData,myDataC, myDataG;
+  var myTeam = [];
+  var myTeamC = [];
+  var myTeamG = [];
+  var interval;
+  var svg, xScale,yScale,yMax,yValueScale,bars, lables,xAxis,yAxis;
+  var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 50
+
+  };
+
+  width = 1139 - margin.left - margin.right;
+  height = parseInt(window.innerHeight) - margin.top - margin.bottom;
+
+  d3.csv("./data/spring-training.csv").then(function(data){
+    svg = d3.select("#chart")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+
+    myDataC = _.orderBy(_.groupBy(data, 'league').C,'pct', 'desc');
+    myDataG = _.orderBy(_.groupBy(data, 'league').G, 'pct', 'desc');
+    //console.log(myDataC);
+    myDataC.forEach(function(d,i){
+      console.log(d.abbr);
+      myTeamC[i]=d.abbr;
+    })
+    myDataG.forEach(function(d,i){
+      myTeamG[i]=d.abbr;
+    })
+    console.log(myDataG);
+    interval = width/16.3;
+    myData = myDataC;
+    myTeam = myTeamC;
+
+
+    xScale = d3.scaleLinear()
+    .domain([0,myData.length+1])
+    .range([0,width-margin.right]);
+
+    yMax = d3.max(myData,function(d,i){
+      //console.log(i)
+      return parseFloat(d.pct)*100+35;
+    });
+    console.log("range: "+yMax);
+    yScale = d3.scaleLinear()
+    .domain([0, yMax])
+    .range([height-margin.top*2,0]);
+
+    yValueScale = d3.scaleLinear()
+    .domain([0, yMax])
+    .range([0,height-margin.top*2]);
+
+
+
+    bars = svg.selectAll("rect")
+    .data(myData)
+    .enter()
+    .append("rect")
+    .attr("x", function(d,i){
+      return (i+1)*interval+margin.left-barWidth/2;
+    })
+    .attr("y", function(d,i){
+      return height-yValueScale(d.pct*100)-margin.bottom;
+
+    })
+    .attr("width", barWidth)
+    .attr("height", function(d){
+      //  console.log(height-yScale(d.pct*100))
+      return yValueScale(d.pct*100);
+    })
+    .attr("fill", "green")
+    .attr("opacity", "0.6");
+    label = svg.selectAll("text")
+    .data(myData)
+    .enter()
+    .append("text")
+    .attr("class", "labels")
+    .text(function(d,i){
+      //console.log(i);
+
+      return parseInt(d.pct*1000)/10+"%";
+
+    })
+    .attr("font-size","11px")
+    .attr("text-anchor","middle")
+    .attr("x", function(d,i) {
+      return (i+1)*interval+margin.left;
+    })
+    .attr("y", function(d) {
+
+      return height-margin.bottom-10-yValueScale(d.pct*100);
+    });
+    xAxis = d3.axisBottom()
+    .scale(xScale)
+
+    .ticks(myData.length)
+    .tickSize(5)
+    .tickPadding(interval+barWidth)
+    .tickFormat(function(d,i){
+
+      return myTeam[i];
+    });
+
+
+
+
+    yAxis = d3.axisLeft()
+    .scale(yScale);
+    svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform","translate("+margin.left+","+(height-margin.bottom)+")")
+    .call(xAxis)
+    .selectAll("text")
+    .attr("x", interval)
+    .attr("y",10);
+
+    svg.append("g")
+    .attr("x", margin.left*3)
+    .attr("transform","translate("+margin.left+","+margin.top/2+")")
+    .call(yAxis);
+
+  });
+//点击G
+  d3.select("#btn_g")
+  .on("click",function() {//selection.on()方法是添加事件监听器的简便方法，接受两个参数：事件类型和监听器（匿名函数）
+    //p标签被单击时执行的任务
+    //新数据集
+    myData = myDataG
+
+    //更新所有散点，注意到这里没有enter()和append()
+    svg.selectAll("rect")
+    .data(myData) //重新绑定新数据
+    .transition() //过渡动画
+    .duration(1000) //过渡动画持续时间 1s
+    /*.ease("linear")
+    .each("start",function(){//过渡开始
+    d3.select(this)
+    .attr("fill","magenta")//改变颜色
+
+  })*/
+
+  .attr("y", function(d,i){
+    return height-yValueScale(d.pct*100)-margin.bottom;
+
+  })
+  .attr("height", function(d){
+    //  console.log(height-yScale(d.pct*100))
+    return yValueScale(d.pct*100);
+  })
+  /* .each("end",function() {
+  d3.select(this)
+  .attr("fill", "green")
+  .attr("opacity", "0.6");
+});*/
+// .attr("r",function(d){
+//     return rScale(d[1]);
+// });
+//更新比例尺值域
+//更新x轴
+svg.selectAll(".labels")
+.data(myDataG)
+.update()
+.text(function(d,i){
+  //console.log(i);
+
+  return parseInt(d.pct*1000)/10+"%";
+
+})
+.attr("font-size","11px")
+.attr("text-anchor","middle")
+.attr("x", function(d,i) {
+  return (i+1)*interval+margin.left;
+})
+.attr("y", function(d) {
+
+  return height-margin.bottom-10-yValueScale(d.pct*100);
+});
+var xGAxis = d3.axisBottom()
+.scale(xScale)
+
+.ticks(myData.length)
+.tickSize(5)
+.tickPadding(interval+barWidth)
+.tickFormat(function(d,i){
+
+  return myTeamG[i];
+});
+
+svg.select('.x-axis')//选择数轴
+.transition()//初始化一个过渡
+.duration(1000)//设定过渡的持续时间
+.call(xGAxis);
+//调用适当的数轴生成器
+//更新y轴
+
+
+});
+
+
+
+
+d3.select("#btn_c")
+.on("click",function() {//selection.on()方法是添加事件监听器的简便方法，接受两个参数：事件类型和监听器（匿名函数）
+  //p标签被单击时执行的任务
+  //新数据集
+  myData = myDataC
+
+  //更新所有散点，注意到这里没有enter()和append()
+  svg.selectAll("rect")
+  .data(myDataC) //重新绑定新数据
+  .transition() //过渡动画
+  .duration(1000) //过渡动画持续时间 1s
+  /*.ease("linear")
+  .each("start",function(){//过渡开始
+  d3.select(this)
+  .attr("fill","magenta")//改变颜色
+
+})*/
+
+.attr("y", function(d,i){
+  return height-yValueScale(d.pct*100)-margin.bottom;
+
+})
+.attr("height", function(d){
+  //  console.log(height-yScale(d.pct*100))
+  return yValueScale(d.pct*100);
+})
+/* .each("end",function() {
+d3.select(this)
+.attr("fill", "green")
+.attr("opacity", "0.6");
+});*/
+// .attr("r",function(d){
+//     return rScale(d[1]);
+// });
+//更新比例尺值域
+//更新x轴
+svg.selectAll(".labels")
+.data(myDataC)
+.update()
+.text(function(d,i){
+//console.log(i);
+
+return parseInt(d.pct*1000)/10+"%";
+
+})
+.attr("font-size","11px")
+.attr("text-anchor","middle")
+.attr("x", function(d,i) {
+return (i+1)*interval+margin.left;
+})
+.attr("y", function(d) {
+
+return height-margin.bottom-10-yValueScale(d.pct*100);
+});
+var xGAxis = d3.axisBottom()
+.scale(xScale)
+
+.ticks(myData.length)
+.tickSize(5)
+.tickPadding(interval+barWidth)
+.tickFormat(function(d,i){
+
+return myTeamC[i];
+});
+
+svg.select('.x-axis')//选择数轴
+.transition()//初始化一个过渡
+.duration(1000)//设定过渡的持续时间
+.call(xGAxis);
+//调用适当的数轴生成器
+//更新y轴
+
+
+});
+
+
+
+</script>
+</body>
+</html>

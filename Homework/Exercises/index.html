@@ -2,44 +2,227 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>EXERCISES - SHERRY DING</title>
-    <link href="./css/style.css" rel="stylesheet" />
-
+    <title>Interactive Data Viz: Updates and Transitions</title>
+    <link href="css/style.css" rel="stylesheet" />
   </head>
 
   <body>
 
     <header>
-      <!-- 1. ADD YOUR NAME -->
-      <h1>Qinyu Ding: Exercise Portfolio</h1>
+      <h1>Updates and Transitions</h1>
+
     </header>
-<script src="./library/d3.min.js" charset="utf-8"></script>
-<script>
-  d3.select("body").selectAll("h1").text("jhhh");
-</script>
-    <div id="content">
 
-      <!-- LINKS TO YOUR INDIVIDUAL EXERCISES
-          1. Add path to file.
-          2. Change link text. (i.e. Bar Chart, Scatterplot, etc.) -->
-
-      <nav>
+    <main>
+      <section>
+        <h2>Ordinal Scales</h2>
+        <p>Ordinal scales are typically used for ordinal data, usually categories with some inherent order to them</p>
         <ul>
-          <li><a href="./bar-chart.html">Bar Chart</a></li>
-          <li><a href="./scatterplot.html">Scatterplot</a></li>
-
+          <li>Grades: A, B, C, D, F</li>
+          <li>Colors: green, blue, red, pink, white, black</li>
+          <li>Polls: strongly agree,agree,neutral,disagree,strongly disagree</li>
         </ul>
-      <!--  <li><a href="./bar-chart.html">Bar Chart</a></li>
-        <li><a href="./scatterplot.html">Scatterplot</a></li>-->
-      </nav>
+      </section>
+      <section>
+          <h2>Domains</h2>
+          <p>In ordinal scales the domains are explicitly entered as an array.  In linear scales we learned that you only needed to enter an array of two numbers (the lowest and the highest values).  Here we enter all of our values:</p>
+          <pre>d3.domain(["A","B","C","D","F"]);
+d3.domain(["#00FF00","#0000FF","#FF0000",
+            "#FF00FF","#FFFFFF","#000000"]);
+d3.domain(["strongly agree","agree","neutral",
+            "disagree","strongly disagree"]);</pre>
+     </section>
+      <section>
+          <h2><code>d3.range</code></h2>
+          <p><code>d3.range(dataset.length)</code> is a convenient way to create an array of sequential numbers.  In this case the length of the dataset</p>
+          <p><code>d3.domain(d3.range(dataset.length))</code><BR> Output: <code>[0,1,2,3,4,5,...]</code></p>
+      </section>
 
-      <main>
+      <section>
+          <h2><code>d3.scaleBand()</code></h2>
+        <p>The <code>d3.scaleBand()</code> scale will calculate the size of the range you give it (e.g <code>d3.range([0,width])</code>) and evenly distribute your domain (<code>d3.domain(["red","green","blue","black","white"])</code>) within that range</p>
+<pre>var xScale = d3.scaleBand()
+        .domain(["red","green","blue","black","white"])
+        .range([0, width]);</pre>
+      </section>
 
-        <!-- PERHAPS WRITE A PARAGRAPH OR TWO ABOUT THIS SITE? -->
+      <section>
+        <h2>rangeRound</h2>
+        <p>d3 will calculate even round numbers for the distribution of your <code>d3.scaleBand()</code> when you use <code>.rangeRound()</code> for your range</p>
+        <pre>var xScale = d3.scaleBand()
+  .domain(["red","green","blue","black","white"])
+  .rangeRound([0, width]);</pre>
+      </section>
 
-        <p></p>
+      <section>
+        <h2>paddingInner</h2>
+        <p>So that not all "bands" are on top of each other, d3 can give some spacing between the <code>d3.scaleBand()</code> divisions by using the d3 method <code>.paddingInner()</code> and giving a percentage within the (). This is a percentage of the width of each "band" that d3 calculated for you.</p>
+        <pre>var xScale = d3.scaleBand()
+    .domain(["red","green","blue","black","white"])
+    .rangeRound([0, width])
+    .paddingInner(0.05);</pre>
+      </section>
 
-      </main>
-    </div>
+      <section>
+        <h2>xScale.bandwidth()</h2>
+        <p>When using <code>d3.scaleBand()</code>, we no longer need to calculate the width of each "bar" (e.g. <code>.attr("width", width/dataset.length - barpadding)</code>).  d3 can calculate the width of the "bars" by using the <code>.bandwidth()</code> of the scale</p>
+
+        <code>.attr("width", xScale.bandwidth());</code>
+      </section>
+      <section>
+          <h2>Click Event Listener</h2>
+        <p>Javascript has event listeners ("click","mouseover","hover", etc.) that can be added to any element in the DOM.  d3 has a simple way of adding event listeners to any element in the DOM using the <code>d3.on()</code> method.</p>
+
+        <p><code>d3.on()</code> takes two arguments: the event and an anonymous function to listen to the event.  The "click" event will listen for a click of the mouse.  Once the "click" has been pressed, the anonymous function will do whatever you tell it to do in your code</p>
+
+        <pre>d3.select(".button")
+  .on("click",function() {
+    console.log("You clicked the button");
+  });</pre>
+      </section>
+
+      <section>
+          <h2>Update dataset</h2>
+         <p>In many of your visualizations, data may update in one way or another.  Whether it's through an API, or daily/weekly/monthly downloads or you update it yourself.  Your d3 charts should adapt to the new data as it comes in without you to have to change any code.</p>
+         <p>The simplest type of update is when only the values of set variable are changed but the amount of values stays the same.</p>
+         <p><b>For example:</b> <code>var dataset = [5,6,8,13,19,25]</code> is changed to <code>dataset = [6,7,9,14,20,26]</code></p>
+         <p>Your chart needs to reflect this change. We can visualize this change with the <code>d3.on("click")</code> event.</p>
+      </section>
+
+      <section>
+        <h2>Update svg</h2>
+        <p>Once you have an updated dataset, you need to make the change to your visualiztion.</p>
+        <p>What changes? the answer to this question is what will determine what your code will be.</p>
+        <pre>svg.selectAll(".bars")
+    .data(dataset)
+    .attr("y", function(d) {
+        return d; })
+    .attr("height", function(d) {
+        return height - d;
+    })</pre>
+    <p>In this case, we have re-bound the data to our already existing ".bars" and updated the y attribute as well as the height attribute with the new data values.</p>
+      </section>
+
+      <section>
+        <h2>Transitions</h2>
+        <p>d3 can make a smooth, nice, animated transition with the <code>.transition()</code> method</p>
+        <p>The d3 library, by using the <code>.transition()</code> method, will instead of changing the values from one to the other, it will interpolate in he values in between the starting and ending values to change them in time.  The default time it takes to make the transition is 250 milliseconds</p>
+        <pre>svg.selectAll("rect")
+  .transition()
+  .attr("y", function(d) {
+        return d; })
+    .attr("height", function(d) {
+        return height - d;
+    })</pre>
+      </section>
+
+      <section>
+          <h2>Duration</h2>
+         <p>With the <code>.duration()</code> method you can control the time it takes for d3 to interpolate the values thus changing the speed of the transition. The number within the () is in milliseconds.</p>
+         <pre>svg.selectAll("rect")
+  .transition()
+  .duration(1000)
+  .attr("y", function(d) {
+        return d; })
+    .attr("height", function(d) {
+        return height - d;
+    })</pre>
+      </section>
+
+      <section>
+        <h2>Ease</h2>
+       <p>The quality of motion used for a transition is called easing. d3 has different ease functions you can use to change the type of animation you want in your transition.  The default easing function is <code>d3.easeCubinInOUt</code>.  You can add these to your transitions through the <code>.ease()</code> method.</p>
+       <pre>svg.selectAll("rect")
+  .transition()
+  .duration(1000)
+  .ease(d3.easeElasticOut)
+  .attr("y", function(d) {
+        return d; })
+    .attr("height", function(d) {
+        return height - d;
+    })</pre>
+    <p><b>Reference: </b><a href="https://github.com/d3/d3-ease">https://github.com/d3/d3-ease</a></p>
+      </section>
+
+      <section>
+          <h2>Delay</h2>
+          <p>You can delay when the transition occurs by using the <code>.delay()</code> method.  Just like <code>.duration()</code>, you add milliseconds within the () for the amount of time you want your transition to delay.</p>
+          <pre>svg.selectAll("rect")
+  .transition()
+  .delay(function(d, i) {
+      return i / dataset.length * 1000;
+  })
+  .duration(1000)
+  .ease(d3.easeElasticOut)
+  .attr("y", function(d) {
+        return d; })
+    .attr("height", function(d) {
+        return height - d;
+    })</pre>
+
+      </section>
+      <section>
+          <h2>Update scales</h2>
+        <p>If you have updated your dataset, you need to change not only your vector graphics, but you need to update your scales as well.  To do this, we only need to update the domain on the existing scale we already created (xScale, yScale, etc.).</p>
+        <pre>yScale.domain([0,d3.max(dataset,function(d) {
+    return d;
+  })]);</pre>
+      </section>
+
+      <section>
+          <h2>Update Axes</h2>
+         <p>If you have axes in your chart, you need to update these as well.  We do this by calling the axes we have already created.  Remember, that the axes go through the scale, since we have already updated the scale, we do not need to re do this part again.</p>
+         <pre>svg.select(".y-axis").call(yAxis);</pre>
+      </section>
+
+      <section>
+          <h2>Adding values</h2>
+        <p>Sometimes, the dataset, instead of changing its values, the amount of data is increased .  In this case, we need to add new elements to our chart.</p>
+        <p>First, we need to update the domain on the horizontal scale.</p>
+        <pre>xScale.domain(d3.range(dataset.length));</pre>
+      </section>
+
+      <section>
+        <h2>Bind the new data</h2>
+        <p>Once the scale is updated, you make your updates upon the reference variable you created earlier for your svg (bars, amounts, circles, etc.).  Add the new dataset with <code>bars.data(dataset)</code>.  Since we are adding a new element that does not yet exist, we need to use the <code>.enter()</code> method to bind the new data to our dataset.</p>
+      </section>
+
+      <section>
+        <h2>Append new elements</h2>
+        <p>Before we merge our existing elements, we have to create our new ones with the new data.  Use <code>.append()</code> just like before.</p>
+      </section>
+      <section>
+        <h2>Merge existing elements</h2>
+        <p>Use the <code>.merge()</code> method to bring all the existing elements into the new update.  Add the variable name inside the ().</p>
+      </section>
+       <section>
+         <h2>Create attributes and styles</h2>
+         <p>Since these are new elements (rect, circle, etc.) we need to add all the attributes like we did before when we created the chart.</p>
+         <pre> bars.data(dataset)
+  .enter()
+  .append("rect")
+  .attr("x",width)
+  .merge(bars)
+  .transition()
+  .duration(1000)
+  .ease(d3.easeElasticOut)
+  .attr("width", xScale.bandwidth())
+  .attr("x", function(d,i){
+      return xScale(i);
+  })
+  .attr("y", function(d) {
+      return yScale(d); })
+  .attr("height", function(d) {
+      return height - yScale(d);
+  })
+  .attr("fill","steelblue")</pre>
+       </section>
+
+    </main>
+
+    <footer>
+      <p><a href="index.html">&laquo; Course Notes</a></p>
+    </footer>
+
   </body>
 </html>

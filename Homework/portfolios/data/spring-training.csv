@@ -1,0 +1,31 @@
+team,abbr,league,wins,losses,pct
+Atlanta,ATL,G,16,16,.500
+Arizona,ARI,C,12,18,.400
+Baltimore,BAL,G,12,17,.414
+Boston,BOS,G,12,17,.414
+Chi Cubs,CHC,C,19,13,.594
+Chi White Sox,CHW,C,12,17,.414
+Cincinnati,CIN,C,8,19,.296
+Cleveland,CLE,C,17,14,.548
+Colorado,COL,C,14,15,.483
+Detroit,DET,G,15,15,.500
+Houston,HOU,G,18,12,.600
+Kansas City,KAN,C,18,12,.600
+LA Angels,LAA,C,15,16,.484
+LA Dodgers,LAD,C,14,15,.483
+Miami,MIA,G,15,13,.536
+Milwaukee,MIL,C,19,14,.576
+Minnesota,MIN,G,14,13,.519
+NY Mets,NYM,G,13,16,.448
+NY Yankees,NYY,G,17,10,.630
+Oakland,OAK,C,14,8,.636
+Philadelphia,PHI,G,14,14,.500
+Pittsburgh,PIT,G,15,15,.500
+San Diego,SDG,C,18,11,.621
+San Francisco,SFG,C,13,16,.448
+Seattle,SEA,C,10,11,.476
+St. Louis,STL,G,12,15,.444
+Tampa Bay,TAM,G,13,17,.433
+Texas,TEX,C,13,17,.433
+Toronto,TOR,G,14,15,.483
+Washington,WAS,G,17,12,.586

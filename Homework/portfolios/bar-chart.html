@@ -104,9 +104,9 @@
                     .range([yAxisHeight-paddingBottom,0]);
       var xAxis = d3.axisBottom()
                     .scale(xScale)
-                    .ticks(myTeam.length)
-                    .tickFormat(function(d,i){
-                    return myTeam[i];
+                    .ticks(myData.length)
+                    .text(function(d,i){
+                    return d.abbr;
                   });
                     console.log(myTeam.length);
       var yAxis = d3.axisRight()
