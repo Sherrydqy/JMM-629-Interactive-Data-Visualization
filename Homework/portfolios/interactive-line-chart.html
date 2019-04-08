@@ -59,8 +59,16 @@
       .append("svg")
       .attr("width", width)
       .attr("height", height);
-
+      svg.append("text")
+          //.attr("class", "y label")
+        //  .attr("text-anchor", "end")
+          .attr("x", 0)
+          .attr("y", margin.top-10)
+          .style("font-size", "10px")
+        //  .attr("transform", "rotate(-90)")
+          .text("Stock Close pricing ($)");
       var timeParser = d3.timeParse("%Y-%m-%d");//timeParse必须和元数据格式相同，这里就不能 %Y/%m/%d
+      var bisectDate = d3.bisector(function(d) { return d.year; }).left;
       data.forEach(function(d,i){
         d.Date = timeParser(d.Date);
         d.Close = parseFloat(d.Close);//一定要parsefloat不然下面的全部数据范围都拿不出来
@@ -70,12 +78,12 @@
                        return d.Date;
                      }))
                      .range([margin.left,width-margin.right]);
-
+     var yMax = d3.max(data,function(d,i){
+       //console.log(i)
+       return d.Close;
+     });
       var yScale = d3.scaleLinear()
-                     .domain(d3.extent(data,function(d){// extend 第一个参数一定是data不能少了，不然data传不进来
-                       return d.Close;
-
-                     }))
+                     .domain([0,yMax+10])
                     // .domain([0,250])
                      .range([height-margin.bottom,margin.top]);// 这个区间一定注意不要反了
 
@@ -87,10 +95,21 @@
                        return yScale(d.Close);
                      });
 
-        svg.append("path")
+        var lineChat = svg.append("path")
            .datum(data)
            .attr("class","line")//一定要有class，line，不然svg画出来是一个图形，一定要fill：none才可以
            .attr("d",line);
+           svg.append("line")
+               .attr("class","midline")
+               .attr("x1",0)
+               .attr("x2",width)
+               .attr("y1",yScale(d3.max(data,function(d) {
+                       return d.Close;
+                       })))
+               .attr("y2",yScale(d3.max(data,function(d) {
+                       return d.Close;
+                       })));
+
         var xAxis = d3.axisBottom()
                       .scale(xScale)
                       .ticks(data.length/36)
@@ -103,7 +122,7 @@
 
          var yAxis = d3.axisLeft()
                        .scale(yScale)
-                       .ticks(parseInt(data.length)/20)
+                       .ticks(parseInt(data.length)/100)
                        .tickFormat(data.forEach(function(d,i){
                          //if(i%20 == 0){
                            return "$ "+d.Close;
@@ -117,8 +136,64 @@
           svg.append("g")
           .attr("x", margin.left*3)
           .attr("transform","translate("+margin.left+",0)")
-          .call(yAxis)
-          .attr("")
+          .call(yAxis);
+          svg.append("text")
+                    //.attr("class", "x label")
+              .attr("text-anchor", "end")
+              .attr("x", margin.left*5)
+              .attr("y", yScale(d3.max(data,function(d) {
+                      return d.Close;
+                    }))-10)
+              .attr("fill","orange")
+              .style("font-size", "10px")
+              .text("The highest Close price over years: $"+yMax);
+
+
+              var focus = svg.append("g")
+                      .attr("class", "focus")
+                      .style("display", "none");
+
+                  focus.append("line")
+                      .attr("class", "x-hover-line hover-line")
+                      .attr("y1", 0)
+                      .attr("y2", height);
+
+                  focus.append("line")
+                      .attr("class", "y-hover-line hover-line")
+                      .attr("x1", width)
+                      .attr("x2", width);
+
+                  focus.append("circle")
+                      .attr("r", 5);
+
+                  focus.append("text")
+                      .attr("x", 15)
+                    	.attr("dy", ".31em");
+
+                  svg.append("rect")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                      .attr("class", "overlay")
+                      .attr("width", width)
+                      .attr("height", height)
+                      .style("opacity", 0)
+                      .on("mouseover", function() { focus.style("display", null); })
+                      .on("mouseout", function() { focus.style("display", "none"); })
+                      .on("mousemove", mousemove);
+
+                  function mousemove() {
+
+                    var x0 = xScale.invert(d3.mouse(this)[0]),
+                        i = bisectDate(data, x0, 1),
+                        d0 = data[i - 1],
+                        d1 = data[i],
+                        d = x0 - d0.year > d1.year - x0 ? d1 : d0;
+                        console.log("鼠标横坐标： "+d3.mouse(this)[0]);
+                    focus.attr("transform", "translate(" + xScale(d.Date) + "," + yScale(d.Close) + ")");
+                    focus.select("text").text(function() { return d.Date; });
+                    focus.select(".x-hover-line").attr("y2", height - yScale(d.Close));
+                    focus.select(".y-hover-line").attr("x2", width + width);
+                  }
+
     });
 
 
