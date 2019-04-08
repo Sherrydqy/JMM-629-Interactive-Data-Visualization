@@ -29,9 +29,11 @@
 
       <p>This chart describes the win percentage of<text id="txt_description"> Cactus</text> in the Spring Training<br>
         The x-axis represents team in the selected League while the y-axis represents each team's win percentage<br>
+
       <button id="btn_c" >Cactus</button>
       <button id="btn_g" >Grapefruit</button>
       <div id="chart"></div>
+        <div height="20px"></div>
 
     </main>
   </div>
@@ -64,7 +66,14 @@
     .append("svg")
     .attr("width", width)
     .attr("height", height);
-
+/*    svg.append("text")
+        //.attr("class", "y label")
+      //  .attr("text-anchor", "end")
+        .attr("x", margin.left+10)
+        .attr("y", margin.top-5)
+        .style("font-size", "10px")
+      //  .attr("transform", "rotate(-90)")
+        .text("Win Percentage (%)");*/
 
     myDataC = _.orderBy(_.groupBy(data, 'league').C,'pct', 'desc');
     myDataG = _.orderBy(_.groupBy(data, 'league').G, 'pct', 'desc');
@@ -90,7 +99,7 @@
 
     yMax = d3.max(myData,function(d,i){
       //console.log(i)
-      return parseFloat(d.pct)*100+35;
+      return parseFloat(d.pct)*100+36.5;
     });
     console.log("range: "+yMax);
     yScale = d3.scaleLinear()
