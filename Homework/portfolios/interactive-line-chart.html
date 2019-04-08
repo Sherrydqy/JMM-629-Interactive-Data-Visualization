@@ -10,7 +10,7 @@
 
     <header>
       <!-- ADD YOUR NAME -->
-      <h1>YOUR NAME: Exercise Portfolio</h1>
+      <h1>Qinyu: Exercise Portfolio</h1>
     </header>
 
     <div id="content">
@@ -27,17 +27,100 @@
 
         <p><!-- INFORMATION ABOUT YOUR VISUALIZATION: What is this about? --></p>
 
-        <!-- ADD YOUR VISUALIZATION HERE -->
+          <div id="chart"></div>
 
       </main>
     </div>
 
     <script src="js/d3.min.js"></script>
     <script>
+    var width, height,g;
+    var barWidth = 35;
+    var flag = 0;
+    var myData;
+    var formatFinal = d3.timeFormat("%B %Y");
+    var formatYear = d3.timeFormat("%Y");
 
-      // add your script here
-      // OR
-      // add a link to a stand-alone script in the js folder
+    var interval;
+    var svg, xScale,yScale,yMax,yValueScale,bars, lables,xAxis,yAxis;
+    var margin = {
+      top: 20,
+      right: 20,
+      bottom: 30,
+      left: 50
+
+    };
+
+    width = 1139 - margin.left - margin.right;
+    height = parseInt(window.innerHeight) - margin.top - margin.bottom;
+
+    d3.csv("./data/DIS.csv").then(function(data){
+      svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+      var timeParser = d3.timeParse("%Y-%m-%d");//timeParse必须和元数据格式相同，这里就不能 %Y/%m/%d
+      data.forEach(function(d,i){
+        d.Date = timeParser(d.Date);
+        d.Close = parseFloat(d.Close);//一定要parsefloat不然下面的全部数据范围都拿不出来
+      });
+      var xScale = d3.scaleTime()
+                     .domain(d3.extent(data,function(d){
+                       return d.Date;
+                     }))
+                     .range([margin.left,width-margin.right]);
+
+      var yScale = d3.scaleLinear()
+                     .domain(d3.extent(data,function(d){// extend 第一个参数一定是data不能少了，不然data传不进来
+                       return d.Close;
+
+                     }))
+                    // .domain([0,250])
+                     .range([height-margin.bottom,margin.top]);// 这个区间一定注意不要反了
+
+        var line = d3.line()
+                     .x(function(d){
+                       return xScale(d.Date);
+                     })
+                     .y(function(d){
+                       return yScale(d.Close);
+                     });
+
+        svg.append("path")
+           .datum(data)
+           .attr("class","line")//一定要有class，line，不然svg画出来是一个图形，一定要fill：none才可以
+           .attr("d",line);
+        var xAxis = d3.axisBottom()
+                      .scale(xScale)
+                      .ticks(data.length/36)
+                      .tickFormat(data.forEach(function(d,i){
+                      if(i%6 == 0){
+                        //console.log("i: "+i+"date:"+formatMonth(d.Date)+" "+formatYear(d.Date));
+                          return formatFinal(d.Date);//+" "+formatYear(d.Date);
+                        }
+                    }));
+
+         var yAxis = d3.axisLeft()
+                       .scale(yScale)
+                       .ticks(parseInt(data.length)/20)
+                       .tickFormat(data.forEach(function(d,i){
+                         //if(i%20 == 0){
+                           return "$ "+d.Close;
+                        // }
+                      }));
+          svg.append("g")
+
+             .attr("class","x-axis")
+             .attr("transform","translate(0,"+(height-margin.bottom)+")")
+             .call(xAxis);
+          svg.append("g")
+          .attr("x", margin.left*3)
+          .attr("transform","translate("+margin.left+",0)")
+          .call(yAxis)
+          .attr("")
+    });
+
 
     </script>
   </body>
