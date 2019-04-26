@@ -48,6 +48,12 @@
       var yAxisHeight = 700;
       var myData = [];
       var myColor = [];
+      var margin = {
+        top: 80,
+        right: 150,
+        bottom: 35,
+        left: 50
+      }
       d3.csv("./data/nfl-rushing.csv").then(function(myData){
         myData.forEach(function(d,i){
           if(parseInt(d.FUM)!=0){
@@ -82,7 +88,24 @@
                    .attr("fill", "ORANGE")
                    .attr("opacity",function(d,i){
                      return myColor[i];
-                   });
+                   })
+                   .on("mouseover",function(d){
+                     var x = d3.select(this).attr("cx");
+                     var y = d3.select(this).attr("cy")/2 + height/2;
+                     d3.select("#tooltip")
+                       .style("left", x+"px")
+                       .style("top", y+"px")
+                       .select("#name")
+                       .text(d.wonder);
+                     d3.select("#conyear")
+                       .text(d.constructed);
+                     d3.select("#tooltipM")
+                       .classed("hidden", false);
+                   })
+                   .on("mouseout",function(){
+                     d3.select("#tooltipM")
+                       .classed("hidden", true);
+                     });
     var label = svg.selectAll("text")
                     .data(myData)
                     .enter()
@@ -122,7 +145,7 @@
                     .scale(xScale)
                     .ticks(5);
 
-      var yAxis = d3.axisRight()
+      var yAxis = d3.axisLeft()
                     .scale(yScale);
       svg.append("g")
          .attr("class", "x-axis")
@@ -130,6 +153,8 @@
          .call(xAxis);
 
         svg.append("g")
+        .attr("x", margin.left*3)
+        .attr("transform","translate("+margin.left+",0)")
           .call(yAxis);
 
 

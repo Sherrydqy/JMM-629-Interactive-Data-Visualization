@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise Portfolio</title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <header>
+      <!-- ADD YOUR NAME -->
+      <h1>Qinyu: Exercise Portfolio</h1>
+    </header>
+
+    <div id="content">
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Return to Main Page</a></li>
+        </ul>
+      </nav>
+
+      <main>
+
+        <h2>Seven Ancient and Seven Modern Wonders of the World</h2>
+
+        <p>This map shows the seven ancient wonders of the world and seven modern wonders of the world. <br>It also describes their builders, constructed years and more related information.</p>
+
+        <!-- ADD YOUR VISUALIZATION HERE -->
+        <div id="l">
+        </div>
+        <div id="chart">
+          <div id="tooltipA" class="hidden">
+            <p style="font-size:9px; color:#777">Seven Ancient Wonders</p>
+            <p id="name" style="font-size:16px; color:#000"><strong>Name</strong></p>
+            <div style="font-size:14px; color:#000"><strong>Builder: </strong><span id="builder" contenteditable=”true”>MR</span></div>
+            <div style="font-size:10px; color:#000" ><strong>Constructed Year: </strong><span id="conyear" contenteditable=”true”>111</span></div>
+            <div style="font-size:10px; color:#000" ><strong>Destroyed Year: </strong><span id="desyear" contenteditable=”true”>111</span></div>
+          </div>
+          <div id="tooltipM" class="hidden">
+            <p style="font-size:9px; color:#777">Seven Modern Wonders</p>
+            <p id="name" style="font-size:16px; color:#000"><strong>Name</strong></p>
+            <div style="font-size:12px; color:#000"><strong>Constructed Year: </strong><span id="conyearM" contenteditable=”true” >111</span></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <script src="library/d3.min.js"></script>
+    <script src="library/d3-geo-projection.v2.min.js"></script>
+    <script src="library/lodash.min.js"></script>
+    <script>
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var legendWidth = window.innerWidth;
+    var legendHeight = 80;
+  //  var mySites = [];
+    var locations = [];
+    var legend = d3.select("#l")
+                   .append("svg")
+                   .attr("width", legendWidth)
+                   .attr("height",legendHeight)
+                   .append("g");
+    var lengendsA = legend.append("rect")
+          .attr("x",0)
+          .attr("y",legendHeight/2)
+          .attr("width", 20)
+          .attr("height",10)
+          .attr("fill","orange")
+          .attr("opacity",0.8)
+          .attr("stroke","	#DAA520")
+          .attr("stroke-width",2)
+    legend.append("text")
+          .attr("x",30)
+          .attr("y",legendHeight/2+8)
+          .style("font-size",8)
+          .text("Ancient Wonders");
+
+        var lengendsM = legend.append("rect")
+              .attr("x",0)
+              .attr("y",legendHeight/6)
+              .attr("width", 20)
+              .attr("height",10)
+              .attr("fill","purple")
+              .attr("opacity",0.8)
+              .attr("stroke","#4B0082")
+              .attr("stroke-width",2)
+      legend.append("text")
+              .attr("x",30)
+              .attr("y",legendHeight/6+8)
+              .style("font-size",8)
+              .text("Modern Wonders");
+    var svg = d3.select("#chart")
+                .append("svg")
+                .attr("width",width)
+                .attr("height",height);
+    d3.json("./data/geojson/world.json").then(function(geo){
+      d3.csv("./data/seven-ancient-wonders.csv").then(function(ancient){
+        d3.csv("./data/seven-modern-wonders.csv").then(function(modern){
+
+          for(var i = 0;i<ancient.length+modern.length;i++){
+            locations[i] = new Object();
+            if(i> -1 && i<ancient.length){
+              //console.log("wonder", ancient[i].wonder);
+              locations[i].wonder = ancient[i].wonder;
+              locations[i].constructed = ancient[i].constructed;
+              locations[i].builders = ancient[i].builders;
+              locations[i].destroyed = ancient[i].destroyed;
+              locations[i].longitude = ancient[i].longitude;
+              locations[i].latitude = ancient[i].latitude;
+              locations[i].flag = "ancient";
+            }
+            else{
+              locations[i].wonder = modern[i-ancient.length].wonder;
+              locations[i].constructed = modern[i-ancient.length].constructed;
+              locations[i].longitude = modern[i-ancient.length].longitude;
+              locations[i].latitude = modern[i-ancient.length].latitude;
+              locations[i].flag = "modern";
+            }
+          }
+          console.log(locations);
+
+          var myProjection = d3.geoCylindricalStereographic()
+                              .translate([width*2/5, height/2])
+                              .scale([180]); //d3.geoCylindricalStereographic()
+          var path = d3.geoPath()
+                       .projection(myProjection);
+
+
+
+
+
+          svg.selectAll("path")
+             .data(geo.features)
+             .enter()
+             .append("path")
+             .attr("d",path)
+             .style("fill","#B0C4DE")
+            // .style("stroke-weight",0.1);
+             .style("stroke","white");
+        svg.selectAll("circle")
+                .data(locations)
+                .enter()
+                .append("circle")
+                .filter(function(d){
+                  return d.flag=="ancient";
+                })
+                .attr("cx",function(d){
+                  //console.log("经纬度： "+myProjection([d.longitude,d.latitude])[0]+" | "+myProjection([d.longitude,d.latitude])[1]);
+                  return myProjection([d.longitude,d.latitude])[0];
+                })
+                .attr("cy",function(d){
+                  return myProjection([d.longitude,d.latitude])[1];
+                })
+                .attr("r", 5)
+                .attr("fill","orange")
+                .attr("opacity",0.8)
+                .attr("stroke","	#DAA520")
+                .attr("stroke-width",2)
+                .on("mouseover",function(d){
+                  var x = d3.select(this).attr("cx");
+                  var y = d3.select(this).attr("cy")/2 + height/2;
+                  d3.select("#tooltipA")
+                    .style("left", x+"px")
+                    .style("top", y+"px")
+                    .select("#name")
+                    .text(d.wonder);
+                  d3.select("#builder")
+                    .text(d.builders);
+                  d3.select("#conyear")
+                    .text(d.constructed);
+                  d3.select("#desyear")
+                    .text(d.destroyed);
+                  d3.select("#tooltipA")
+                    .classed("hidden", false);
+                })
+                .on("mouseout",function(){
+                  d3.select("#tooltipA")
+                    .classed("hidden", true);
+                  });
+
+          svg.selectAll("rect")
+                        .data(locations)
+                        .enter()
+                        .append("circle")
+                        .filter(function(d){
+                          return d.flag == "modern";
+                        })
+                        .attr("cx",function(d){
+                        //  console.log("经纬度： "+myProjection([d.longitude,d.latitude])[0]+" | "+myProjection([d.longitude,d.latitude])[1]);
+                          return myProjection([d.longitude,d.latitude])[0];
+                        })
+                        .attr("cy",function(d){
+                          return myProjection([d.longitude,d.latitude])[1];
+                        })
+                        .attr("r", 5)
+                        .attr("fill","purple")
+                        .attr("opacity",0.8)
+                        .attr("stroke","#4B0082")
+                        .attr("stroke-width",2)
+                        .on("mouseover",function(d){
+                          var x = d3.select(this).attr("cx");
+                          var y = d3.select(this).attr("cy")/2 + height/2;
+                          d3.select("#tooltipM")
+                            .style("left", x+"px")
+                            .style("top", y+"px")
+                            .select("#name")
+                            .text(d.wonder);
+                          d3.select("#conyearM")
+                            .text(d.constructed);
+                          d3.select("#tooltipM")
+                            .classed("hidden", false);
+                        })
+                        .on("mouseout",function(){
+                          d3.select("#tooltipM")
+                            .classed("hidden", true);
+                          });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

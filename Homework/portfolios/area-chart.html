@@ -42,7 +42,7 @@
         top: 80,
         right: 150,
         bottom: 35,
-        left: 20
+        left: 50
       }
       var Events = new Array();
       var EventDates = new Array();
@@ -112,7 +112,7 @@
                         }
                     }));
 
-         var yAxis = d3.axisRight()
+         var yAxis = d3.axisLeft()
                        .scale(yScale)
                        .ticks(parseInt(data.length)/20)
                        .tickFormat(data.forEach(function(d,i){
@@ -127,8 +127,9 @@
              .call(xAxis);
           svg.append("g")
              //.attr("class","x-axis")
-             .attr("transfrom","translate("+200+","+200+")")
-             .call(yAxis);
+             .attr("x", margin.left*3)
+             .attr("transform","translate("+margin.left+",0)")
+                .call(yAxis);
         /*  svg.append("text")
             //.attr("class", "x label")
             .attr("text-anchor", "end")
@@ -139,8 +140,10 @@
               //.attr("class", "y label")
             //  .attr("text-anchor", "end")
             //  .attr("x", 0)
-              .attr("y", margin.top-40)
-              .attr("dy", ".75em")
+            .attr("x", 15)
+            .attr("y", margin.top-30)
+            .attr("dy", ".75em")
+            .attr("font-size",12)
             //  .attr("transform", "rotate(-90)")
               .text("Stock pricing ($)");
             svg.append("line")
@@ -155,12 +158,13 @@
                         })));
                 svg.append("text")
                           //.attr("class", "x label")
-                    .attr("text-anchor", "end")
-                    .attr("x", width+270)
+                    //.attr("text-anchor", "end")
+                    .attr("x", 60)
                     .attr("y", yScale(d3.max(data,function(d) {
                             return d.Close;
-                          }))+3)
+                          }))-5)
                     .attr("fill","orange")
+                    .attr("font-size",9)
                     .text("The highest closing price over years");
                 svg.append("line")
                     .attr("class","verline")

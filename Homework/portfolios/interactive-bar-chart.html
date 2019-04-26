@@ -27,8 +27,8 @@
       <text id="txt_league">Cactus</text>
     </h2>
 
-      <p>This chart describes the win percentage of<text id="txt_description"> Cactus</text> in the Spring Training<br>
-        The x-axis represents team in the selected League while the y-axis represents each team's win percentage<br>
+      <p>This chart describes the win percentage of<text id="txt_description"> Cactus</text> in the Spring Training.<br>
+        The x-axis represents team in the selected League while the y-axis represents each team's win percentage.<br>
 
       <button id="btn_c" >Cactus</button>
       <button id="btn_g" >Grapefruit</button>
@@ -128,7 +128,7 @@
       //  console.log(height-yScale(d.pct*100))
       return yValueScale(d.pct*100);
     })
-    .attr("fill", "green")
+    .attr("fill", "	#2E8B57")
     .attr("opacity", "0.6");
     label = svg.selectAll("text")
     .data(myData)
@@ -215,31 +215,32 @@
 d3.select("#txt_league")
   .style('fill', '#FF7F50')
   .text("Grapefruit");
-
+  d3.select("#txt_description")
+    .text(" Grapefruit");
+    svg.selectAll("rect")
+       .attr("fill", "#FF6344");
 svg.selectAll(".labels")
+    .data(myDataG)
+    .style("fill-opacity", 1)
+    .transition() //过渡动画
+    .duration(1000)
+    .text(function(d,i){
+      //console.log(i);
 
-.data(myDataG)
+      return parseInt(d.pct*1000)/10+"%";
 
-.style("fill-opacity", 1)
-.transition() //过渡动画
-.duration(1000)
-.text(function(d,i){
-  //console.log(i);
+    })
+    .attr("font-size","11px")
+    .attr("text-anchor","middle")
+    .attr("x", function(d,i) {
+      return (i+1)*interval+margin.left;
+    })
+    .attr("y", function(d) {
 
-  return parseInt(d.pct*1000)/10+"%";
-
-})
-.attr("font-size","11px")
-.attr("text-anchor","middle")
-.attr("x", function(d,i) {
-  return (i+1)*interval+margin.left;
-})
-.attr("y", function(d) {
-
-  return height-margin.bottom-10-yValueScale(d.pct*100);
-});
-var xGAxis = d3.axisBottom()
-.scale(xScale)
+      return height-margin.bottom-10-yValueScale(d.pct*100);
+    });
+    var xGAxis = d3.axisBottom()
+    .scale(xScale)
 
 .ticks(myData.length)
 .tickSize(5)
@@ -284,7 +285,10 @@ d3.select("#btn_c")
   d3.select("#txt_league")
     .style('fill', 'darkGreen')
     .text("Cactus");
-
+  d3.select("#txt_description")
+    .text(" Cactus");
+    svg.selectAll("rect")
+       .attr("fill", "	#2E8B57");
 svg.selectAll(".labels")
 
 .data(myDataC)

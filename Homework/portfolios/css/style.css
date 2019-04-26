@@ -39,8 +39,8 @@ nav {
 
 .line{
   fill: none;
-  stroke: steelblue;
-  stroke-width:2.5px;
+  stroke: 	#008B8B;
+  stroke-width:3.5px;
 }
 .area{
   fill:steelblue;
@@ -78,4 +78,55 @@ nav {
 }
 .x-axis{
   margin-left: 40px;
+}
+
+#tooltipA{
+  position: absolute;
+  width:200px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius:10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltipM{
+  position: absolute;
+  width:200px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius:10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltipA.hidden {
+  display: none;
+}
+
+#tooltipM.hidden {
+  display: none;
+}
+
+#tooltip{
+  position: absolute;
+  width:200px;
+  height: auto;
+  padding: 10px;
+  background-color: white;
+  -webkit-border-radius:10px;
+  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+#tooltip.hidden {
+  display: none;
 }

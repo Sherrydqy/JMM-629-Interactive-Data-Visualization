@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Exercise Portfolio</title>
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+
+    <header>
+      <!-- ADD YOUR NAME -->
+      <h1>Qinyu: Exercise Portfolio</h1>
+    </header>
+
+    <div id="content">
+
+      <nav>
+        <ul>
+          <li><a href="index.html">Return to Main Page</a></li>
+        </ul>
+      </nav>
+
+      <main>
+
+        <h2>World Heritage Sites Distrubution</h2>
+
+        <p>This map describes the number of heritage sites worldwide and their distribution.</p>
+
+        <!-- ADD YOUR VISUALIZATION HERE -->
+        <div id="chart"></div>
+      </main>
+    </div>
+
+    <script src="library/d3.min.js"></script>
+    <script src="library/d3-geo-projection.v2.min.js"></script>
+    <script src="library/lodash.min.js"></script>
+    <script>
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var mySites = [];
+    var svg = d3.select("#chart")
+                .append("svg")
+                .attr("width",width)
+                .attr("height",height);
+    d3.json("./data/geojson/world.json").then(function(geo){
+      d3.csv("./data/unesco-world-heritage-sites.csv").then(function(heritages){
+        //console.log(geo);
+        for(var i = 0; i<heritages.length; i++){
+          for(var j = 0; j<geo.features.length; j++){
+            if(heritages[i].country == geo.features[j].properties.name){
+              heritages[i].sites = parseInt(heritages[i].sites)//这里记得parseInt 不然最后最大值取不到54而是取到9 https://stackoverflow.com/questions/30874617/d3-max-didnt-get-the-correct-value
+              geo.features[j].properties.value = heritages[i].sites;
+              if(parseInt(heritages[i].sites)!=null){
+                  mySites[i] = heritages[i].sites;
+            }
+
+              //console.log("GEOOOOOOO: "+geo.features[j].properties.value);
+              break; //千万记得break， 不然已经找到了还一直把循环走完多浪费时间啊
+            }
+          }
+          }
+          var myProjection = d3.geoCylindricalStereographic()
+                              .translate([width*2/5, height/2])
+                              .scale([180]); //d3.geoCylindricalStereographic()
+          var path = d3.geoPath()
+                       .projection(myProjection);
+          var myColor = d3.scaleLinear()
+                          .domain(d3.extent(heritages, function(d){
+                              d.sites = parseInt(d.sites);
+                              return d.sites;//这里extent 记得用heritages的，因为geo的话有的州在heritages里面
+                                            // 没有对应数据，那么value就是Null。这样你得出来的 extent [undefinded, undefinded]
+                            })) //d3.extent(data, function(d){});
+                          .range(d3.schemeSet3 );
+                        //  console.log(myColor);
+          var legend = svg.append("g");
+          var legendItems = _.uniq(mySites);
+          var sorted = _.orderBy(legendItems, function(d){
+            return d;
+          }, 'asc');
+          //console.log(sorted);
+          var lengends = legend.selectAll("rect")
+                .data(sorted)
+                .enter()
+                .append("rect")
+                .attr("x",function(d,i){
+                  return (i)*10
+                })
+                .attr("y",height-247)
+                .attr("width", 10)
+                .attr("height",10)
+                .attr("fill",function(d,i){
+                  console.log(sorted.length);
+                  if(i<sorted.length-1){
+                  return myColor(sorted[i]);
+                }
+                else{
+                  return myColor(sorted[i-1]);
+                }
+              });
+
+            legend.selectAll("text")
+                .data(sorted)
+                .enter()
+                .append("text")
+                .attr("x",function(d,i){
+                  return (i)*10;
+                })
+                .attr("y",height-223)
+                .style("font-size",8)
+                .text(function(d,i){
+                  if(i==0 ){
+                    return sorted[0]+"";
+                  }
+                  else if(i==sorted.length-1){
+                    return sorted[sorted.length-2];
+                  }
+                });
+                legend.append("text")
+                      .attr("x",0)
+                      .attr("y",height-270)
+                      .style("font-size",13)
+                      .text("# of Heritage Sites");
+
+
+                var lengendsM = legend.append("rect")
+                                      .attr("x",0)
+                                      .attr("y",height-210)
+                                      .attr("width", 20)
+                                      .attr("height",10)
+                                      .attr("fill","#bbbbbb");
+
+                      legend.append("text")
+                              .attr("x",30)
+                              .attr("y",height-203)
+                              .style("font-size",8)
+                              .text("No Data");
+
+
+          svg.selectAll("path")
+             .data(geo.features)
+             .enter()
+             .append("path")
+             .attr("d",path)
+             .style("fill", function(d){
+               var sites = parseInt(d.properties.value);
+               //console.log("sites: "+sites);
+               if (sites){
+                 return myColor(sites);
+               }
+               else{
+                 return "#bbbbbb";
+               }
+             })
+             .style("stroke","#fff");
+            // .style("fill",myColor(8));
+             //console.log(myColor("32"));
+        });
+      });
+    </script>
+  </body>
+</html>

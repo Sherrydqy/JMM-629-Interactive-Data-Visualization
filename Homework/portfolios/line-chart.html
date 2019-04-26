@@ -42,7 +42,7 @@
         top: 80,
         right: 150,
         bottom: 35,
-        left: 20
+        left: 50
       }
       var Events = new Array();
       var EventDates = new Array();
@@ -83,10 +83,6 @@
                     // .domain([0,250])
                      .range([height,margin.top]);// 这个区间一定注意不要反了
 
-
-
-
-
         var line = d3.line()
                      .x(function(d){
                        return xScale(d.Date);
@@ -98,6 +94,8 @@
         svg.append("path")
            .datum(data)
            .attr("class","line")//一定要有class，line，不然svg画出来是一个图形，一定要fill：none才可以
+           .attr("opacity",0.6)
+           .attr("stroke-weight",1)
            .attr("d",line);
         var xAxis = d3.axisBottom()
                       .scale(xScale)
@@ -109,7 +107,7 @@
                         }
                     }));
 
-         var yAxis = d3.axisRight()
+         var yAxis = d3.axisLeft()
                        .scale(yScale)
                        .ticks(parseInt(data.length)/20)
                        .tickFormat(data.forEach(function(d,i){
@@ -123,8 +121,8 @@
              .attr("transform","translate("+0+","+height+")")
              .call(xAxis);
           svg.append("g")
-             //.attr("class","x-axis")
-             .attr("transfrom","translate("+200+","+200+")")
+          .attr("x", margin.left*3)
+          .attr("transform","translate("+margin.left+",0)")
              .call(yAxis);
         /*  svg.append("text")
             //.attr("class", "x label")
@@ -135,9 +133,10 @@
           svg.append("text")
               //.attr("class", "y label")
             //  .attr("text-anchor", "end")
-            //  .attr("x", 0)
-              .attr("y", margin.top-40)
+              .attr("x", 15)
+              .attr("y", margin.top-30)
               .attr("dy", ".75em")
+              .attr("font-size",12)
             //  .attr("transform", "rotate(-90)")
               .text("Stock pricing ($)");
             svg.append("line")
@@ -152,13 +151,16 @@
                         })));
                 svg.append("text")
                           //.attr("class", "x label")
-                    .attr("text-anchor", "end")
-                    .attr("x", width+270)
+
+                    .attr("x", 60)
                     .attr("y", yScale(d3.max(data,function(d) {
                             return d.Close;
-                          }))+3)
+                          }))-5)
                     .attr("fill","orange")
-                    .text("The highest closing price over years");
+                    .attr("font-size",9)
+                    .text("The highest closing price over years: $"+d3.max(data,function(d) {
+                            return d.Close;
+                          }));
                 svg.append("line")
                     .attr("class","verline")
                     .attr("x1",xScale(timeParser("2009-01-20")))
@@ -222,16 +224,16 @@
                                   .append("line")
                                   .attr("class","pointline")
                                   .attr("x1",function(d){
-                                    return xScale(d.Date)+5;
+                                    return xScale(d.Date)+3;
                                   })
                                   .attr("x2",function(d){
-                                    return xScale(d.Date)+25;
+                                    return xScale(d.Date)+15;
                                   })
                                   .attr("y1",function(d){
                                     return yScale(d.Close)-5;
                                   })
                                   .attr("y2",function(d){
-                                    return yScale(d.Close)-25;
+                                    return yScale(d.Close)-30;
                                   });
 
                 var pointText = svg.selectAll("rect")
@@ -248,7 +250,7 @@
                                   .attr("class","pointnote")
 
                                   .attr("x",function(d){
-                                    return xScale(d.Date)+35;
+                                    return xScale(d.Date)-15;
                                   })
                                   .attr("y",function(d){
                                     return yScale(d.Close)-35;
