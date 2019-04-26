@@ -189,7 +189,7 @@
                           return d.flag == "modern";
                         })
                         .attr("cx",function(d){
-                        //  console.log("经纬度： "+myProjection([d.longitude,d.latitude])[0]+" | "+myProjection([d.longitude,d.latitude])[1]);
+                        //  console.log("经纬度： "+ssmyProjection([d.longitude,d.latitude])[0]+" | "+myProjection([d.longitude,d.latitude])[1]);
                           return myProjection([d.longitude,d.latitude])[0];
                         })
                         .attr("cy",function(d){
