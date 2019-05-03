@@ -160,8 +160,9 @@
                 .attr("stroke","	#DAA520")
                 .attr("stroke-width",2)
                 .on("mouseover",function(d){
-                  var x = d3.select(this).attr("cx");
-                  var y = d3.select(this).attr("cy")/2 + height/2;
+                var x = d3.select(this).attr("x");
+                 var y = d3.select(this).attr("cy")/2 + height/2;
+
                   d3.select("#tooltipA")
                     .style("left", x+"px")
                     .style("top", y+"px")

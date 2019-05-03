@@ -1,3 +1,7 @@
+.linefl{
+  fill:none;
+  stroke:#aaa;
+}
 html {
   font-size: 16px;
 }
@@ -8,6 +12,44 @@ body {
   line-height: 1.5;
 }
 
+h1{
+  font-family: 'Merriweather', serif;
+  font-size:54px;
+  color: #449e91;
+}
+h2{
+  font-family: 'Playfair Display', serif;
+  font-weight: Bold;
+  color: #e5b35a;
+}
+.txt{
+  font-family: 'Crimson Text', serif;
+  font-size: 18px;
+}
+p.txt{
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+}
+.sec{
+  font-family: 'Merriweather', serif;
+  background-color: #449e91;
+  color: white;
+  padding-left: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px
+}
+.chartTitle{
+  font-family: 'Merriweather', serif;
+  font-size:24px;
+}
+.labels{
+  font-family: 'Quicksand', sans-serif;
+  font-size:12px;
+}
+.ll{
+  font-family: 'Merriweather', serif;
+  font-size:15px;
+}
 a,
 a:visited {
   color: rgba(47,94,170);
@@ -25,7 +67,9 @@ header {
 header h1 {
   margin-left: 8px;
 }
-
+.text{
+  width: 300px;
+}
 #content {
   margin-top: 100px;
   display: grid;
@@ -35,68 +79,30 @@ header h1 {
 
 nav {
   border: 0px solid #999;
-  width:400px;
+  width:300px;
+}
+.lineglades{
+  fill:none;
+  stroke:#e5b35a;
 }
 
-.line{
-  fill: none;
-  stroke: 	#008B8B;
-  stroke-width:3.5px;
-}
-.area{
-  fill:steelblue;
-  opacity: 0.7;
-}
-.midline{
-  fill: none;
-  stroke: orange;
-  stroke-width:1px;
-}
-.verline{
-  fill: none;
-  stroke: red;
-  stroke-width:1px;
-  stroke-dasharray:2;
-}
-.noteline{
-  fill: none;
-  stroke: red;
-  stroke-width:1px;
-}
-.note{
-  font-size: 13px;
-  fill: red;
+.linenassau{
+  fill:none;
+  stroke:#449e91;
 }
 
-.pointline{
-  fill: none;
-  stroke: black;
-  stroke-width:1px;
-}
-.pointnote{
-  font-size: 11px;
-  fill: black;
-}
-.x-axis{
-  margin-left: 40px;
+.x-Axis{
+  fill:none;
 }
 
-#tooltipA{
-  position: absolute;
-  width:200px;
-  height: auto;
-  padding: 10px;
-  background-color: white;
-  -webkit-border-radius:10px;
-  -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-  pointer-events: none;
+.y-Axis{
+  fill:none;
+  stroke-dasharray:5,5;
 }
 
 #tooltipM{
   position: absolute;
-  width:200px;
+  width:150px;
   height: auto;
   padding: 10px;
   background-color: white;
@@ -105,19 +111,14 @@ nav {
   -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
   pointer-events: none;
-}
-
-#tooltipA.hidden {
-  display: none;
 }
 
 #tooltipM.hidden {
   display: none;
 }
-
 #tooltip{
   position: absolute;
-  width:200px;
+  width:150px;
   height: auto;
   padding: 10px;
   background-color: white;
@@ -130,4 +131,8 @@ nav {
 
 #tooltip.hidden {
   display: none;
+}
+
+.hover{
+  stroke: red;
 }

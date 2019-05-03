@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Increasing ALICE in Florida. What has happened?</title>
+  </head>
+  <body>
+    <div id="content" style="width:900px">
+
+      <nav>
+        <div id="intro" class="text"></div>
+      </nav>
+
+      <main>
+
+      <!--  <h2>Monthly Stock Information for Apple Inc.</h2>
+          <h3>From Jan. 1, 1996 to March 1, 2019</h3>
+
+        <p>This chart describes monthly stock price for Apple Company iFrom Jan. 1, 1996 to March 1, 2019<br>
+          The y-axis represents the stock pricing while the x-axis represents the time</p>-->
+
+        <!-- ADD YOUR VISUALIZATION HERE -->
+        <h1>Increasing ALICE in Florida.
+            What has Happened?</h1>
+          <h2>From the Lens of Comparison between Glades County and Nassau county in Florida</h2>
+
+        <p class="txt"><strong>By Qinyu Ding</strong><br>
+          SOURCES:Bureau of Labor Statistics<br>
+              United States Census Bureau</p>
+              <h3 class="sec">Many people in Florida are living in ALICE </h3>
+              <div  class="txt"><strong>ALICE</strong> (<strong>A</strong>sset <strong>L</strong>imited, <strong>I</strong>ncome <strong>C</strong>onstrained,
+                <strong>E</strong>mployed) households are those who “earn above the Federal Poverty Level, but less than the cost of living for the county”, scrambling to make ends meet. In 2016, the share of ALICE households in Miami hit the highest level in four years. 32 out of 100 Florida residents are struggling to pay for the basic necessities for their life.
+              </div>
+              <p class="chartTitle">Percentage of ALICE Households in Florida 2016</p>
+
+        <div id="choropleth">
+          <div id="tooltipM" class="hidden">
+            <p id="name" style="font-size:16px; color:#000"><strong>Name</strong></p>
+            <div style="font-size:14px; color:#000"><strong>Alice:  </strong><span id="ttalice" contenteditable=”true”>MR</span></div>
+            <div style="font-size:10px; color:#000" ><strong>Total Households: </strong><span id="tthouseholds" contenteditable=”true”>111</span></div>
+            <div style="font-size:10px; color:#000" ><strong>Poverty: </strong><span id="ttpoverty" contenteditable=”true”>111</span></div>
+            <div style="font-size:10px; color:#000" ><strong>Above Alice: </strong><span id="ttabovealice" contenteditable=”true”>111</span></div>
+          </div>
+        </div>
+        <p class="chartTitle">Share of Florida Families in Poverty
+From 2012 to 2016</p>
+  <p><span class="labels" style="color:#e5b35a;">Glades</span>
+  <span class="labels" style="color:#449e91;margin-left:30px;">Nassau</span>
+  <span class="labels" style="color:#aaa;margin-left:30px;">Florida Avg</span></p>
+        <div id="poverty"></div>
+
+        <p class="chartTitle">Share of Florida Families in ALICE
+From 2012 to 2016</p>
+<p><span class="labels" style="color:#e5b35a;">Glades</span>
+<span class="labels" style="color:#449e91;margin-left:30px;">Nassau</span>
+<span class="labels" style="color:#aaa;margin-left:30px;">Florida Avg</span></p>
+        <div id="alice"></div>
+        <h3 class="sec">The job market has been in good shape  </h3>
+        <div class="txt"> The past four years have seen a levelling-off in unemployment rate of Florida. The average unemployment rate dropped to 4.8% in 2016, from 8.5% in 2012. The  decrease was slowly while steady. Nassau’s unemployment rate in 2016 fell to 5.8%, 3.7% less than 2012. Glades, the county with the highest ALICE in 2016, has had its ups and downs in the annual jobless rate since 2012, it still slightly decreased by 1.2%, from 14.5% to 13.3%. In general, the job market in Florida has been in good shape. What prevents people in Florida from living a better life?</div>
+          <p class="chartTitle">Unemployment Rate Over Years
+From 2012 to 2016</p>
+<p><span class="labels" style="color:#e5b35a;">Glades</span>
+<span class="labels" style="color:#449e91;margin-left:30px;">Nassau</span>
+<span class="labels" style="color:#aaa;margin-left:30px;">Florida Avg</span></p>
+        <div id="unemployment"></div>
+        <h3 class="sec">What makes life in Florida even harder?  </h3>
+        <div class="txt">Although jobs are more plentiful than before, not everyone in Florida are making more money than the past.
+
+In Glades, the one which has the highest ALICE households in 2016, the median annual income of a house of 4 (2 adults, 1 infant, 1 preschooler ) is $43,605. While in Nassau, the median earning of a family of 4 per year is $80,275, 84% more than the median wage in Glades. During the past four years, Glades families of 4’s annual income has increased only by 1% compared to 2012 which was $43,149.  In Nassau, the median annual income of a house of 4 (2 adults, 1 infant, 1 preschooler ) is $80,275, 8% more than the annual income in 2012 which was $74,137.
+
+Despite the huge difference between the annual income of households in these two counties, their annual survival budget in 2016 shows little difference.
+
+In Nassau, it costs a family of 4 $56,244 per year just to get by. The budget has increased 23.3% more than what it costed a family in 2012 which was $45,609. Even in this county with the least ALICE households, the wage increasement is far less than the increasement of survival budget. Situation in Glades is even worse. The average of annual survival budget for a family of 4 living in Glades is $52,869, 5.9% more than what it costed a family in 2012 which was $49,756. Even though the difference between the increasement of income and outcome are smaller than that of Nassau, the median income of families in Glades cannot even meet the least survival budget.</div>
+          <p class="chartTitle">Share of Glades Household Annual Income
+(Families of 4)
+2012 and 2016</p>
+        <div>
+          <button id="y2012" style="margin-left:250px;">2012</button>
+          <button id="y2016" style="margin-left:100px;">2016</button>
+          <div id="income-glades" style="margin-top:50px;"></div>
+        </div>
+        <p class="chartTitle">Share of Nassau Household Annual Income
+<br>(Families of 4)<br>
+2012 and 2016</p>
+        <div>
+          <button id="yna2012" style="margin-left:250px;">2012</button>
+          <button id="yna2016" style="margin-left:100px;">2016</button>
+          <div id="income-nassau" style="margin-top:50px;"></div>
+        </div>
+
+
+
+      </main>
+      <nav>
+        <div id="intro" class="text"></div>
+      </nav>
+    </div>
+
+    <main>
+
+
+    <!--  <div id="right" ></div>-->
+    </main>
+  </div>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/> <!--写成 <script>也会报错因为script文件不能以.开头，不加rel=”stylesheet"的话，css文件链接不到这里 -->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Text" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet">
+
+    <script src="./library/d3.min.js"></script>
+    <script src="./library/d3-geo-projection.v2.min.js"></script>
+    <script src="./library/lodash.min.js"></script>
+    <script type="text/javascript" src="./js/choropleth.js"></script>
+    <script type="text/javascript" src="./js/poverty-over-years.js"></script>
+    <script type="text/javascript" src="./js/alice-over-years.js"></script>
+    <script type="text/javascript" src="./js/unemployment-over-years.js"></script>
+    <script type="text/javascript" src="./js/income-glades.js"></script>
+    <script type="text/javascript" src="./js/income-nassau.js"></script>
+
+  </body>
+</html>
