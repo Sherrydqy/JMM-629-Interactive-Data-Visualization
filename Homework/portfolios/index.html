@@ -1,46 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>Qinyu Ding's Portfolio</title>
-    <link href="./css/style.css" rel="stylesheet" />
+  	<meta charset="utf-8">
+  	<title>How does automation affect your job?</title>
+  	<meta name="description" content="A visualization">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel='stylesheet' href='../css/style.css'>
+    <script src="../library/d3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.independent.js"></script>
+    <script src="../library/d3-annotation.js"></script>
+    <script src="../library/d3-annotation.independent.js"></script>
+    <script src="../library/noframework.waypoints.js"></script>
+    <script src="../library/lodash.min.js"></script>
+    <script src="../library/jquery.min.js"></script>
   </head>
-
   <body>
+    <div id="graphic">
+      <div id="man">
+        <object id="manObject" data="../assets/man.svg"></object>
+      </div>
+      <div id="introBgLeaves">
+        <object  data="../assets/introBgLeaves.svg"></object>
+      </div>
+      <div id="secBgLeaves">
+        <object data="../assets/secBgLeaves.svg"></object>
+      </div>
+      <div id="leaveBg">
+        <object id="leaveBgObject" data="../assets/leaveBg.svg"></object>
+      </div>
+      <div id="market">
+        <object id="marketObject" data="../assets/Marketization of Unpaid Work.svg"></object>
+      </div>
+      <div id="risingIncome">
+        <object id="risingIncomeObject" data="../assets/Rising Incomes.svg"></object>
+      </div>
+      <div id="energy">
+        <object id="energyObject" data="../assets/Sum of Investment in Energy Transitions and Efficiency.svg"></object>
+      </div>
+      <div id="infrastructure">
+        <object id="infrastructureObject" data="../assets/Sum of Investment in Infrasstructure.svg"></object>
+      </div>
+      <div id="construction">
+        <object id="risingIncomeObject" data="../assets/Sum of Investment in Real Estate Construction.svg"></object>
+      </div>
+      <div id="aging">
+        <object id="agingObject" data="../assets/Aging Health Care.svg"></object>
+      </div>
+      <div id="tech">
+        <object id="techObject" data="../assets/Technology Spending.svg"></object>
+      </div>
+      <div id="tooltipHistory" class="tooltip hidden">
+        <span id="historyCat" style="font-size:18px;line-height: 1;font-weight: bold; color:#000"><strong>Cat</strong></span><br><br>
+        <div style="font-size:14px; color:#000">In <span id="thistoryYear" style="color:black;" contenteditable=”true”>1998</span></div>
+        <div style="font-size:12px; color:#000" >had the employment of </strong><span id="thistoryEmploy" style="color:black;"  contenteditable=”true”>111</span> thousand.</div>
+      </div>
+      <div id="tooltipJob" class="tooltip hidden">
+      </div>
 
-    <header>
-      <!-- 1. ADD YOUR NAME -->
-      <h1>Qinyu Ding: Exercise Portfolio</h1>
-    </header>
+      <div id="tooltipFactor" class="tooltip hidden">
+      </div>
+      <div id="containerCenter" class="container-center" >
+        <div id="tc1" >
+          <h2 style="line-height:2">How will automation affects your job?</h2>
+          <h4 style="text-align:center;">Automation has brought us higher production rate and increased productivity,
+            thus becoming more and more popular in our life. However, fears about the transformation of automation of
+            the workplace and effects on employment date back centuries. Fast forward and rapid recent advances in
+            automation technologies, including artificial intelligence, autonomous systems, and robotics are now raising
+             the fears anew—and with new urgency.<br><br><strong>"What effect does it have on our career?"</strong>
+          </h4>
+          <br>
+          <h4 style="font-size: 22px;text-align:center;"> Choose your occupation and let’s get started:</h4>
+          <span>
+            <select id="jobDropDown"  size="1" class="dropDown"  onchange="changeMyJob()">
+                 <option style="font:gray; align-content:center;" >-Choose your job here-</option>
 
-    <div id="content">
+             </select>
+           </span>
+        </div>
 
-      <!-- LINKS TO YOUR INDIVIDUAL EXERCISES
-          1. Add path to file.
-          2. Change link text. (i.e. Bar Chart, Scatterplot, etc.) -->
+        <div id="tc2">
+          <div id="ap-txt">
+            <h3 style="line-height:1.6;">In the future, </h3>
+            <h1 id="data-ap">I'm sorry, what's your job?</h1>
+            <h3 style="line-height:1.6;">tasks of your job<br>are susceptible to automation.</h3>
+          </div>
+          <div id="ap-bg">
+            <div id="rect-Auto">
+              <h6 style="font-size:16px;" id="data-Auto"></h6>
+            </div>
+            <div id="rect-NonAuto">
+              <h6 style="font-size:16px;"id="data-NonAuto"></h6>
+            </div>
+          </div>
+        </div>
 
-      <nav>
-        <ul>
-          <li><a href="./bar-chart.html">Bar Chart</a></li>
-          <li><a href="./scatterplot.html">Scatterplot</a></li>
-          <li><a href="./line-chart.html">Line Chart</a></li>
-          <li><a href="./area-chart.html">Area Chart</a></li>
-          <li><a href="./interactive-bar-chart.html">Interactive Bar Chart</a></li>
-          <li><a href="./interactive-line-chart.html">Interactive Line Chart</a></li>
-          <li><a href="./choropleth.html">Choropleth Map</a></li>
-          <li><a href="./interactive-map.html">Interactive Map</a></li>
-        </ul>
-      <!--  <li><a href="./bar-chart.html">Bar Chart</a></li>
-        <li><a href="./scatterplot.html">Scatterplot</a></li>-->
-      </nav>
+        <div class="clearFloat"></div>
 
-      <main>
+        <div id="container" class="container">
+          <div id="div1">
+            <span>On average, </span><span style="font-weight:bold;" id="myCatAvg">47.13%</span><span> tasks of </span><span id="myCat" style="font-weight:bold;">all</span><span> jobs are AUTOMATABLE.</span>
+          </div>
+          <div id="div2">
+            <h4>Roles in more cut-and-dried activity areas or those which require less human intelligence are most likely to be impacted by automation.</h4>
+            <h4>On the contrary, occupations with higher demand in creativity, interpersonal and networking skills as well as empathy stand fatter chance to survive.</h4>
+          </div>
+          <div id="div3">
+            <h4>“High risk” jobs represent only one-quarter of all jobs, however. The remaining, more secure jobs include a broader array of occupations ranging from professional and technical roles with high educational requirements to low-paying personal care and domestic service work characterized
+              by non-routine or abstract activities and social and emotional intelligence.</h4>
+          </div>
+        </div>
+     <!-- svg -->
+         <div id="fixed" class="fixed" >
+           <h4 class="chartTitleLeaves" style="z-index:100;margin-left:6%;line-height: 1.7;font-size:16px;font-weight:bold; font-family:Arial;"> Automation potential by major occupation group, 2016</h4>
+           <h4 class="chartCaptionLeaves" style="z-index:100;margin-left:17%;line-height:0.1;" >Automation Potential</h4>
+           <svg id="viz" width="100%" height="100%" style="top:-40px;">
+           </svg>
+         </div>
 
-        <!-- PERHAPS WRITE A PARAGRAPH OR TWO ABOUT THIS SITE? -->
+         <div id="tc3">
+           <div id="ap-txt">
+             <h3>However, this is NOT unprecedented</h3>
+             <h4 style="line-height:1.6;">For centries, the emerging of new technology has constantly changed employment drastically. Technologies rised in the First and the Second Industrial Revolution not only partially disrupted the workforce, but also boosted job creation. </h4>
+           </div>
+         </div>
 
-        <p></p>
+         <div id="containerStack" class="container">
 
-      </main>
+           <div id="div1Sta">
+             Roles in more cut-and-dried
+           </div>
+           <div id="div2Sta">
+             <h4>Roles in more cut-and-dried activity areas or those which require less human intelligence are most likely to be impacted by automation.</h4>
+           </div>
+           <div id="div3Sta">
+             <h4>Automation could displace a significant share of work in the future.</h4>
+           </div>
+         </div>
+      <!-- svg -->
+          <div id="fixedStack" class="fixed" >
+            <h4 class="chartTitleLeaves" style="z-index:100;margin-left:8%;line-height: 1.5;font-size:16px;font-weight:bold; font-family:Arial;"> Share of total employment by sector in the United States, 1950–2010</h4>
+            <h4 class="chartCaptionLeaves" style="z-index:100;margin-left:8%;line-height:0.1;" >(Thousand)</h4>
+            <svg id="vizSta" width="100%" height="100%" style="z-index:90;">
+            </svg>
+            <div id="tooltipHistory" class="tooltip hidden">
+              <p id="historyCat" style="font-size:16px; color:#000"><strong>Cat</strong></p>
+              <div style="font-size:14px; color:#000">In <span id="historyYear" contenteditable=”true”>1998</span></div>
+              <div style="font-size:10px; color:#000" >had the employment of </strong><span id="historyEmploy" contenteditable=”true”>111</span> thousand.</div>
+            </div>
+          </div>
+          <div id="tc4">
+            <div id="ap-txt">
+              <h3 >For the future, it is true that <br>significant share of work will be displaced to 2030</h3>
+              <h4 style="line-height:1.6;">About half the activities people are paid to do globally could theoretically be automated using currently demonstrated technologies. In about 60 percent of occupations, at least one-third of the constituent activities could be automated, implying substantial workplace transformations and changes for all workers.</h4>
+            </div>
+            <div id="desert">
+              <object id="desertObject" data="../assets/desert.svg"></object>
+            </div>
+            <div id="oasis">
+              <object id="oasisObject" data="../assets/oasis.svg"></object>
+            </div>
+          </div>
+          <div id="tc5">
+            <div id="ap-txt">
+              <h2>But there will be many new jobs being created at the same time.</h2>
+              <h4 style="line-height:1.6;">While automation will prove challenging for tens of millions of workers globally who will need to switch occupations, in the long-term the economy can adjust to provide enough work for everyone.</h4>
+            </div>
+          </div>
+          <div id="containerLeaves" class="container">
+
+            <div id="div1Leaves">
+              <h4>There are seven identified global trend that can potentially contribute to increasing labor demand to 2030, including:</h4>
+              <h4 style="font-size:20px">
+&nbsp&nbsp&nbsprising incomes<br>&nbsp&nbsp&nbspaging health care<br>&nbsp&nbsp&nbsptechnology spending<br>&nbsp&nbsp&nbspinvestment in real estate construction<br>&nbsp&nbsp&nbspinvestment in infrastructure<br>&nbsp&nbsp&nbspinvestment in energy transitions and efficiency<br>  &nbsp&nbsp&nbspmarketization of unpaid work.</h4>
+            </div>
+            <div id="div2Leaves">
+              <h4>Rising incomes in emerging economies will create the largest-scale new labor
+demand as spending increases on consumer goods, health care, and education.</h4>
+              <h4>It was estimated to be able to create between about 250 million
+and 280 million new full-time equivalent jobs, net of automation, by 2030.</h4>
+<h4>The growth due to rising incomes can mitigate automation’s expected toll on
+workers in retail and accommodation and food services; retail salespeople, food preparation
+workers, and waiters see some of the largest boosts from higher consumer spending. It also benefits export of foods and goods to other countries.</h4>
+
+            </div>
+            <div id="div3Leaves">
+              <h4>The increasing income also adds diversity to daily expenditures, resulting from purchasing higher quaility of lives like health care and education. Aging health care is estimated to increase labor demand by 26 million to 43 million jobs.</h4>
+
+<h4>As technology development continues apace, the technology sector is expected to keep growing rapidly, and this in turn will create incremental labor demand to develop and deploy technology. </h4>
+
+<h4>Another important potential source comes from currently unpaid work such as cooking and house cleaning. Some of this type of work could be shift to paid employment due to the rising female labor participantion rates in this area, for example, daycare or pre-kindergarten schooling programs.</h4>
+            </div>
+            <div id="div4Leaves">
+              <h4>The last three trends share the same feature  - they are all susceptible to the investment from the government.</h4>
+
+<h4>If the investment follows the current trend, infrastructure is estimated to be able to create 10-30 million jobs while the estimation for real estitate is 10-50 million. Shifts of renewable energy is estimated to create 0-10 million jobs, which is the smallest sector of all seven trends.</h4>
+
+<h4>However, if the progress of these trends is accelerated by additional investment, which is called "Step-up scenario”, it is estimated that more job opporunities will be created in those situations.</h4>
+            </div>
+          </div>
+       <!-- svg -->
+           <div id="fixedLeaves" class="fixed" >
+             <h4 class="chartTitleLeaves" style="font-size:16px;font-weight:bold; font-family:Arial;"> Potential jobs created from seven catalysts of labor demand, 2016–2030</h4>
+             <h5 class="chartCaptionLeaves" >(Million full-time equivalent jobs)</h5>
+             <svg id="vizLeaves" width="100%" height="100%">
+             </svg>
+             <div id="tooltipLeaves" class="tooltip hidden">
+               <p id="leaveName" style="font-size:16px; color:#000"><strong>Cat</strong></p>
+               <!--<div style="font-size:14px; color:#000">In <span id="historyYear" contenteditable=”true”>1998</span></div>
+               <div style="font-size:10px; color:#000" >had the employment of </strong><span id="historyEmploy" contenteditable=”true”>111</span> thousand.</div>
+-->
+             </div>
+           </div>
+
     </div>
   </body>
+  <script src="../js/index.js"></script>
 </html>
